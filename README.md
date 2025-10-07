@@ -27,3 +27,46 @@ Créer un outil vocal intelligent capable de :
 ##  Auteur
 **Rossindji DEGAND** – Master 2 Hypermedia  
 Université Paris 8
+
+
+##  Diagramme entité–relation (Mermaid)
+
+```mermaid
+erDiagram
+    NOTE ||--|| AUDIO : "contient"
+    NOTE ||--|| TRANSCRIPTION : "génère"
+    NOTE ||--|| RÉSUMÉ : "résume"
+    NOTE }o--o{ ÉTIQUETTE : "est associée à"
+
+    NOTE {
+        int note_id PK
+        datetime created_at
+        string titre
+    }
+
+    AUDIO {
+        int audio_id PK
+        int note_id FK
+        string chemin_fichier
+        string format
+        int duree
+    }
+
+    TRANSCRIPTION {
+        int transcription_id PK
+        int note_id FK
+        text contenu
+    }
+
+    RÉSUMÉ {
+        int summary_id PK
+        int note_id FK
+        text contenu
+    }
+
+    ÉTIQUETTE {
+        int tag_id PK
+        string libelle
+    }
+```
+
