@@ -1,0 +1,88 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex:  <http://ollavoice.org/vocab#> .
+
+### ===== Classes =====
+ex:Note a rdfs:Class ;
+  rdfs:label "Note" ;
+  rdfs:comment "Entrée principale : regroupe audio, transcription, résumé et étiquettes." .
+
+ex:Audio a rdfs:Class ;
+  rdfs:label "Audio" ;
+  rdfs:comment "Fichier audio brut enregistré (WAV/MP3) avec ses métadonnées." .
+
+ex:Transcription a rdfs:Class ;
+  rdfs:label "Transcription" ;
+  rdfs:comment "Texte produit par Whisper à partir de l'audio." .
+
+ex:Resume a rdfs:Class ;
+  rdfs:label "Résumé" ;
+  rdfs:comment "Résumé généré par un LLM via Ollama." .
+
+ex:Tag a rdfs:Class ;
+  rdfs:label "Étiquette" ;
+  rdfs:comment "Mot-clé thématique appliqué aux notes." .
+
+### ===== Properties =====
+ex:hasAudio a rdf:Property ;
+  rdfs:label "a pour audio" ;
+  rdfs:domain ex:Note ;
+  rdfs:range ex:Audio .
+
+ex:hasTranscription a rdf:Property ;
+  rdfs:label "a pour transcription" ;
+  rdfs:domain ex:Note ;
+  rdfs:range ex:Transcription .
+
+ex:hasSummary a rdf:Property ;
+  rdfs:label "a pour résumé" ;
+  rdfs:domain ex:Note ;
+  rdfs:range ex:Resume .
+
+ex:hasTag a rdf:Property ;
+  rdfs:label "a pour étiquette" ;
+  rdfs:domain ex:Note ;
+  rdfs:range ex:Tag .
+
+ex:filePath a rdf:Property ;
+  rdfs:label "chemin de fichier" ;
+  rdfs:domain ex:Audio ;
+  rdfs:range xsd:string .
+
+ex:format a rdf:Property ;
+  rdfs:label "format" ;
+  rdfs:domain ex:Audio ;
+  rdfs:range xsd:string .
+
+ex:durationSec a rdf:Property ;
+  rdfs:label "durée (sec)" ;
+  rdfs:domain ex:Audio ;
+  rdfs:range xsd:integer .
+
+ex:sampleRate a rdf:Property ;
+  rdfs:label "fréquence d'échantillonnage (Hz)" ;
+  rdfs:domain ex:Audio ;
+  rdfs:range xsd:integer .
+
+ex:content a rdf:Property ;
+  rdfs:label "contenu" ;
+  rdfs:domain ex:Transcription ;
+  rdfs:range xsd:string .
+
+ex:summaryText a rdf:Property ;
+  rdfs:label "texte du résumé" ;
+  rdfs:domain ex:Resume ;
+  rdfs:range xsd:string .
+
+ex:modelName a rdf:Property ;
+  rdfs:label "modèle utilisé" ;
+  rdfs:domain [ a rdfs:Class ; rdfs:label "Transcription|Résumé" ] ;
+  rdfs:range xsd:string .
+
+ex:language a rdf:Property ;
+  rdfs:label "langue" ;
+  rdfs:domain ex:Transcription ;
+  rdfs:range xsd:string .
