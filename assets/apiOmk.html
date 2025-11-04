@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test API Omeka S – Ollavoice</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: 20px auto; }
+    textarea, input { width: 100%; margin-bottom: 10px; }
+    pre { background: #f5f5f5; padding: 10px; }
+    button { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <h1>API Omeka S – Ollavoice</h1>
+
+  <label>URL de base de l’API</label>
+  <input id="baseUrl" value="http://localhost/omeka-s/api" />
+
+  <label>Clé API (si activée)</label>
+  <input id="keyIdentity" placeholder="key_identity" />
+  <input id="keyCredential" placeholder="key_credential" />
+
+  <button id="btn-list">Lister les items</button>
+  <button id="btn-create">Créer une note de test</button>
+
+  <h2>Résultat</h2>
+  <pre id="output"></pre>
+
+  <script>
+    function buildUrl(path) {
+      const base = document.getElementById('baseUrl').value.replace(/\/$/, '');
+      const keyId = document.getElementById('keyIdentity').value;
+      const keyCred = document.getElementById('keyCredential').value;
+      let url = base + path;
+      if (keyId && keyCred) {
+        url += (url.includes('?') ? '&' : '?') + 'key_identity=' + encodeURIComponent(keyId) + '&key_credential=' + encodeURIComponent(keyCred);
+      }
+      return url;
+    }
+
+    document.getElementById('btn-list').onclick = async () => {
+      const out = document.getElementById('output');
+      out.textContent = 'Chargement...';
+      try {
+        const res = await fetch(buildUrl('/items'));
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = e;
+      }
+    };
+
+    document.getElementById('btn-create').onclick = async () => {
+      const out = document.getElementById('output');
+      out.textContent = 'Création...';
+      const payload = {
+        "o:resource_template": {"o:id": null},
+        "o:resource_class": null,
+        "o:label": "Note API",
+        "o:owner": null,
+        "dcterms:title": [{ "@value": "Note créée via apiOmk.html", "type": "literal" }],
+        "dcterms:date": [{ "@value": new Date().toISOString().slice(0, 10), "type": "literal" }]
+      };
+      try {
+        const res = await fetch(buildUrl('/items'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = e;
+      }
+    };
+  </script>
+</body>
+</html>
