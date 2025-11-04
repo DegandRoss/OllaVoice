@@ -1,0 +1,83 @@
+{
+    "o:label": "Note vocale (OllaVoice)",
+    "o:resource_template_property": [
+        {
+            "o:alternate_label": null,
+            "o:alternate_comment": null,
+            "o:is_required": false,
+            "o:is_private": false,
+            "o:default_lang": null,
+            "data_types": [],
+            "vocabulary_namespace_uri": "http:\/\/purl.org\/dc\/terms\/",
+            "vocabulary_label": "Dublin Core",
+            "local_name": "title",
+            "label": "Title"
+        },
+        {
+            "o:alternate_label": null,
+            "o:alternate_comment": null,
+            "o:is_required": false,
+            "o:is_private": false,
+            "o:default_lang": null,
+            "data_types": [],
+            "vocabulary_namespace_uri": "http:\/\/purl.org\/dc\/terms\/",
+            "vocabulary_label": "Dublin Core",
+            "local_name": "description",
+            "label": "Description"
+        },
+        {
+            "o:alternate_label": null,
+            "o:alternate_comment": null,
+            "o:is_required": false,
+            "o:is_private": false,
+            "o:default_lang": null,
+            "data_types": [],
+            "vocabulary_namespace_uri": "http:\/\/ollavoice.org\/vocab#",
+            "vocabulary_label": "Ollavoice Vocabulary",
+            "local_name": "hasAudio",
+            "label": "a pour audio"
+        },
+        {
+            "o:alternate_label": null,
+            "o:alternate_comment": null,
+            "o:is_required": false,
+            "o:is_private": false,
+            "o:default_lang": null,
+            "data_types": [],
+            "vocabulary_namespace_uri": "http:\/\/ollavoice.org\/vocab#",
+            "vocabulary_label": "Ollavoice Vocabulary",
+            "local_name": "hasTag",
+            "label": "a pour \u00e9tiquette"
+        },
+        {
+            "o:alternate_label": null,
+            "o:alternate_comment": null,
+            "o:is_required": false,
+            "o:is_private": false,
+            "o:default_lang": null,
+            "data_types": [],
+            "vocabulary_namespace_uri": "http:\/\/ollavoice.org\/vocab#",
+            "vocabulary_label": "Ollavoice Vocabulary",
+            "local_name": "hasTranscription",
+            "label": "a pour transcription"
+        },
+        {
+            "o:alternate_label": null,
+            "o:alternate_comment": null,
+            "o:is_required": false,
+            "o:is_private": false,
+            "o:default_lang": null,
+            "data_types": [],
+            "vocabulary_namespace_uri": "http:\/\/ollavoice.org\/vocab#",
+            "vocabulary_label": "Ollavoice Vocabulary",
+            "local_name": "hasSummary",
+            "label": "a pour r\u00e9sum\u00e9"
+        }
+    ],
+    "o:resource_class": {
+        "vocabulary_namespace_uri": "http:\/\/ollavoice.org\/vocab#",
+        "vocabulary_label": "Ollavoice Vocabulary",
+        "local_name": "Note",
+        "label": "Note"
+    }
+}
