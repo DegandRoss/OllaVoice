@@ -1,0 +1,3 @@
+dcterms:title,dcterms:date,ex:hasAudio,ex:hasTranscription,ex:hasSummary,ex:hasTag,ex:modelName,ex:language
+Réunion équipe,2025-10-07,data/audios/reunion_20251007.wav,"Texte de la réunion transcrit…","Résumé de la réunion…","travail;projet","whisper-small / llama3","fr"
+Idée nouvelle fonctionnalité,2025-10-08,data/audios/idee_20251008.wav,"Transcription de l'idée…","Résumé de l'idée…","idée;UX","whisper-small / llama3","fr"
