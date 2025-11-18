@@ -7,7 +7,8 @@
     body { font-family: sans-serif; max-width: 800px; margin: 20px auto; }
     textarea, input { width: 100%; margin-bottom: 10px; }
     pre { background: #f5f5f5; padding: 10px; }
-    button { margin-right: 10px; }
+    button { margin-right: 10px; margin-top: 5px; }
+    h2, h3 { margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -20,8 +21,20 @@
   <input id="keyIdentity" placeholder="key_identity" />
   <input id="keyCredential" placeholder="key_credential" />
 
+  <h2>Lecture / écriture d’items</h2>
   <button id="btn-list">Lister les items</button>
   <button id="btn-create">Créer une note de test</button>
+
+  <h2>Upload d’un média (audio / vidéo)</h2>
+  <p>
+    <label>Fichier à envoyer :</label><br>
+    <input type="file" id="fileInput">
+  </p>
+  <p>
+    <label>ID de la note (item) à laquelle lier le fichier</label><br>
+    <input id="itemId" type="number" value="1" />
+  </p>
+  <button id="btn-upload">Uploader le fichier comme média</button>
 
   <h2>Résultat</h2>
   <pre id="output"></pre>
@@ -33,13 +46,17 @@
       const keyCred = document.getElementById('keyCredential').value;
       let url = base + path;
       if (keyId && keyCred) {
-        url += (url.includes('?') ? '&' : '?') + 'key_identity=' + encodeURIComponent(keyId) + '&key_credential=' + encodeURIComponent(keyCred);
+        url += (url.includes('?') ? '&' : '?')
+          + 'key_identity=' + encodeURIComponent(keyId)
+          + '&key_credential=' + encodeURIComponent(keyCred);
       }
       return url;
     }
 
+    const out = document.getElementById('output');
+
+    // Lister les items
     document.getElementById('btn-list').onclick = async () => {
-      const out = document.getElementById('output');
       out.textContent = 'Chargement...';
       try {
         const res = await fetch(buildUrl('/items'));
@@ -50,16 +67,20 @@
       }
     };
 
+    // Créer une note de test
     document.getElementById('btn-create').onclick = async () => {
-      const out = document.getElementById('output');
       out.textContent = 'Création...';
       const payload = {
-        "o:resource_template": {"o:id": null},
+        "o:resource_template": { "o:id": null },
         "o:resource_class": null,
         "o:label": "Note API",
         "o:owner": null,
-        "dcterms:title": [{ "@value": "Note créée via apiOmk.html", "type": "literal" }],
-        "dcterms:date": [{ "@value": new Date().toISOString().slice(0, 10), "type": "literal" }]
+        "dcterms:title": [
+          { "@value": "Note créée via apiOmk.html", "type": "literal" }
+        ],
+        "dcterms:date": [
+          { "@value": new Date().toISOString().slice(0, 10), "type": "literal" }
+        ]
       };
       try {
         const res = await fetch(buildUrl('/items'), {
@@ -69,10 +90,74 @@
           },
           body: JSON.stringify(payload)
         });
+        if (!res.ok) {
+          const txt = await res.text();
+          out.textContent = "Erreur API : " + res.status + " " + txt;
+          return;
+        }
         const data = await res.json();
         out.textContent = JSON.stringify(data, null, 2);
       } catch (e) {
         out.textContent = e;
+      }
+    };
+
+    // Upload d’un média (audio / vidéo) lié à un item
+    document.getElementById('btn-upload').onclick = async () => {
+      const fileInput = document.getElementById('fileInput');
+      const itemId = document.getElementById('itemId').value;
+
+      if (!fileInput.files.length) {
+        out.textContent = "Choisis d'abord un fichier.";
+        return;
+      }
+      if (!itemId) {
+        out.textContent = "Indique l’ID d’un item (note) existant.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+
+      // Description du média à créer
+      const mediaData = {
+        "o:ingester": "upload",
+        "o:item": { "o:id": parseInt(itemId, 10) },
+        "o:is_public": true,
+        "dcterms:title": [
+          {
+            "type": "literal",
+            "@value": "Fichier importé depuis apiOmk.html (" + file.name + ")"
+          }
+        ]
+      };
+
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(mediaData));
+      formData.append('file[0]', file, file.name);
+
+      out.textContent = 'Upload en cours...';
+
+      try {
+        const res = await fetch(buildUrl('/media'), {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+            // NE PAS mettre Content-Type ici, fetch le gère pour FormData
+          },
+          credentials: 'same-origin'
+        });
+
+        if (!res.ok) {
+          const txt = await res.text();
+          out.textContent = "Erreur API (upload) : " + res.status + " " + txt;
+          return;
+        }
+
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = "Erreur JS : " + e;
       }
     };
   </script>
