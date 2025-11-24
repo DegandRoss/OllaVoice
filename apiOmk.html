@@ -2,48 +2,262 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Test API Omeka S – Ollavoice</title>
   <style>
-    body { font-family: sans-serif; max-width: 800px; margin: 20px auto; }
-    textarea, input { width: 100%; margin-bottom: 10px; }
-    pre { background: #f5f5f5; padding: 10px; }
-    button { margin-right: 10px; margin-top: 5px; }
-    h2, h3 { margin-top: 20px; }
+    :root{
+      --bg: #0f172a;
+      --card: #0b1220;
+      --card-2: #111a2e;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2:#22c55e;
+      --danger:#ef4444;
+      --border: rgba(148,163,184,0.2);
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      font-synthesis: style;
+    }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 700px at 10% -10%, #1e293b 0%, transparent 50%),
+                  radial-gradient(1000px 600px at 100% 0%, #0ea5e9 0%, transparent 45%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    .container{
+      max-width: 980px;
+      margin: 28px auto;
+      padding: 0 16px 32px;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 18px 18px;
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    header h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .3px;
+    }
+
+    header .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius: 999px;
+      background: rgba(56,189,248,.12);
+      border:1px solid rgba(56,189,248,.35);
+      color: var(--accent);
+      font-weight:600;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+
+    .card h2{
+      margin:0 0 10px 0;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    label{
+      display:block;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 8px 0 6px;
+    }
+
+    input, textarea{
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(15,23,42,.7);
+      color: var(--text);
+      border:1px solid var(--border);
+      border-radius: 10px;
+      padding:10px 12px;
+      outline:none;
+      transition: border .15s ease, box-shadow .15s ease;
+      font-size: 14px;
+    }
+    input:focus, textarea:focus{
+      border-color: rgba(56,189,248,.6);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.15);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    button{
+      appearance:none;
+      border:none;
+      border-radius: 10px;
+      padding:10px 14px;
+      font-weight:600;
+      cursor:pointer;
+      transition: transform .04s ease, opacity .15s ease, background .15s ease;
+      background: rgba(56,189,248,.12);
+      color: var(--text);
+      border:1px solid rgba(56,189,248,.35);
+    }
+    button:hover{ opacity:.9; }
+    button:active{ transform: translateY(1px); }
+
+    .btn-green{
+      background: rgba(34,197,94,.12);
+      border:1px solid rgba(34,197,94,.35);
+    }
+
+    .btn-red{
+      background: rgba(239,68,68,.12);
+      border:1px solid rgba(239,68,68,.35);
+    }
+
+    .hint{
+      font-size:12px;
+      color: var(--muted);
+      margin-top:6px;
+    }
+
+    pre{
+      background: #050814;
+      border:1px solid var(--border);
+      border-radius: 12px;
+      padding:12px;
+      overflow:auto;
+      max-height: 380px;
+      font-size: 12.5px;
+      line-height:1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    footer{
+      text-align:center;
+      color: var(--muted);
+      font-size:12px;
+      margin-top: 14px;
+    }
+
+    @media (max-width:700px){
+      .row{ grid-template-columns: 1fr; }
+      header{ flex-direction:column; align-items:flex-start; }
+    }
   </style>
 </head>
 <body>
-  <h1>API Omeka S – Ollavoice</h1>
+  <div class="container">
 
-  <label>URL de base de l’API</label>
-  <input id="baseUrl" value="http://localhost/omeka-s/api" />
+    <header>
+      <h1>API Omeka S – Ollavoice</h1>
+      <div class="badge">Lecture • Création • Upload média</div>
+    </header>
 
-  <label>Clé API (si activée)</label>
-  <input id="keyIdentity" placeholder="key_identity" />
-  <input id="keyCredential" placeholder="key_credential" />
+    <div class="grid">
 
-  <h2>Lecture / écriture d’items</h2>
-  <button id="btn-list">Lister les items</button>
-  <button id="btn-create">Créer une note de test</button>
+      <section class="card">
+        <h2>Configuration API</h2>
 
-  <h2>Upload d’un média (audio / vidéo)</h2>
-  <p>
-    <label>Fichier à envoyer :</label><br>
-    <input type="file" id="fileInput">
-  </p>
-  <p>
-    <label>ID de la note (item) à laquelle lier le fichier</label><br>
-    <input id="itemId" type="number" value="1" />
-  </p>
-  <button id="btn-upload">Uploader le fichier comme média</button>
+        <label>URL de base de l’API</label>
+        <input id="baseUrl" value="http://localhost/omeka-s/api" />
 
-  <h2>Résultat</h2>
-  <pre id="output"></pre>
+        <label>Clé API (pré-remplie dans le code)</label>
+        <div class="row">
+          <input id="keyIdentity" placeholder="key_identity" />
+          <input id="keyCredential" placeholder="key_credential" />
+        </div>
+        <div class="hint">
+          Ces champs sont déjà remplis automatiquement par le script. Tu peux les changer si besoin.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Lecture / écriture d’items</h2>
+        <div class="actions">
+          <button id="btn-list">Lister les items</button>
+          <button id="btn-create" class="btn-green">Créer une note de test</button>
+        </div>
+        <div class="hint">
+          « Créer une note » fait un POST /items.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Upload d’un média (audio / vidéo)</h2>
+
+        <label>Fichier à envoyer</label>
+        <input type="file" id="fileInput" />
+
+        <label>ID de la note (item) à laquelle lier le fichier</label>
+        <input id="itemId" type="number" value="1" />
+
+        <div class="actions">
+          <button id="btn-upload" class="btn-green">Uploader le fichier comme média</button>
+        </div>
+        <div class="hint">
+          Le fichier sera créé en tant que média « upload » et rattaché à l’item.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Résultat</h2>
+        <pre id="output">Prêt.</pre>
+      </section>
+
+    </div>
+
+    <footer>Omeka S API Test – Ollavoice</footer>
+  </div>
 
   <script>
+    /* =========================================================
+       1) Configuration par défaut des clés API
+       ========================================================= */
+    const DEFAULT_KEY_ID   = "bdU2ZuVJR8Zj78n44sIWgQnPSZlVxtmZ";
+    const DEFAULT_KEY_CRED = "jXVGjrYwAON1CPMIOzPfT0Yp8P1CdECH";
+
+    // Pré-remplissage à l'ouverture
+    document.getElementById('keyIdentity').value = DEFAULT_KEY_ID;
+    document.getElementById('keyCredential').value = DEFAULT_KEY_CRED;
+
     function buildUrl(path) {
       const base = document.getElementById('baseUrl').value.replace(/\/$/, '');
-      const keyId = document.getElementById('keyIdentity').value;
-      const keyCred = document.getElementById('keyCredential').value;
+      const keyId = document.getElementById('keyIdentity').value.trim();
+      const keyCred = document.getElementById('keyCredential').value.trim();
+
       let url = base + path;
       if (keyId && keyCred) {
         url += (url.includes('?') ? '&' : '?')
@@ -55,26 +269,33 @@
 
     const out = document.getElementById('output');
 
+    function show(obj){
+      out.textContent = (typeof obj === "string")
+        ? obj
+        : JSON.stringify(obj, null, 2);
+    }
+
     // Lister les items
     document.getElementById('btn-list').onclick = async () => {
-      out.textContent = 'Chargement...';
+      show('Chargement...');
       try {
         const res = await fetch(buildUrl('/items'));
+        if (!res.ok) {
+          show("Erreur API : " + res.status + " " + await res.text());
+          return;
+        }
         const data = await res.json();
-        out.textContent = JSON.stringify(data, null, 2);
+        show(data);
       } catch (e) {
-        out.textContent = e;
+        show("Erreur JS : " + e);
       }
     };
 
     // Créer une note de test
     document.getElementById('btn-create').onclick = async () => {
-      out.textContent = 'Création...';
+      show('Création...');
       const payload = {
-        "o:resource_template": { "o:id": null },
-        "o:resource_class": null,
-        "o:label": "Note API",
-        "o:owner": null,
+        "o:is_public": true,
         "dcterms:title": [
           { "@value": "Note créée via apiOmk.html", "type": "literal" }
         ],
@@ -82,23 +303,22 @@
           { "@value": new Date().toISOString().slice(0, 10), "type": "literal" }
         ]
       };
+
       try {
         const res = await fetch(buildUrl('/items'), {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(payload)
         });
+
         if (!res.ok) {
-          const txt = await res.text();
-          out.textContent = "Erreur API : " + res.status + " " + txt;
+          show("Erreur API : " + res.status + " " + await res.text());
           return;
         }
         const data = await res.json();
-        out.textContent = JSON.stringify(data, null, 2);
+        show(data);
       } catch (e) {
-        out.textContent = e;
+        show("Erreur JS : " + e);
       }
     };
 
@@ -108,17 +328,16 @@
       const itemId = document.getElementById('itemId').value;
 
       if (!fileInput.files.length) {
-        out.textContent = "Choisis d'abord un fichier.";
+        show("Choisis d'abord un fichier.");
         return;
       }
       if (!itemId) {
-        out.textContent = "Indique l’ID d’un item (note) existant.";
+        show("Indique l’ID d’un item (note) existant.");
         return;
       }
 
       const file = fileInput.files[0];
 
-      // Description du média à créer
       const mediaData = {
         "o:ingester": "upload",
         "o:item": { "o:id": parseInt(itemId, 10) },
@@ -135,31 +354,28 @@
       formData.append('data', JSON.stringify(mediaData));
       formData.append('file[0]', file, file.name);
 
-      out.textContent = 'Upload en cours...';
+      show('Upload en cours...');
 
       try {
         const res = await fetch(buildUrl('/media'), {
           method: 'POST',
           body: formData,
-          headers: {
-            'Accept': 'application/json'
-            // NE PAS mettre Content-Type ici, fetch le gère pour FormData
-          },
-          credentials: 'same-origin'
+          headers: { 'Accept': 'application/json' }
+          // ne pas mettre Content-Type ici
         });
 
         if (!res.ok) {
-          const txt = await res.text();
-          out.textContent = "Erreur API (upload) : " + res.status + " " + txt;
+          show("Erreur API (upload) : " + res.status + " " + await res.text());
           return;
         }
 
         const data = await res.json();
-        out.textContent = JSON.stringify(data, null, 2);
+        show(data);
       } catch (e) {
-        out.textContent = "Erreur JS : " + e;
+        show("Erreur JS : " + e);
       }
     };
   </script>
+
 </body>
 </html>
